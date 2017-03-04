@@ -19,11 +19,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>example</groupId>
-  <artifactId>amqp-example</artifactId>
+  <groupId>com.fawltytowers</groupId>
+  <artifactId>jms-amqp</artifactId>
   <version>0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-  <name>example</name>
+  <name>jms-amqp</name>
   <description>ActiveMQ AMQP Java Examples</description>
 
   <dependencies>

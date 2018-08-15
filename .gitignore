@@ -1,0 +1,5 @@
+target/
+.*/
+AzSbAmqp/AzSbAmqp/bin/
+AzSbAmqp/AzSbAmqp/obj/
+AzSbAmqp/packages/

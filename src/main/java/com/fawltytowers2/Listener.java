@@ -26,17 +26,13 @@ class Listener {
 
         final String TOPIC_PREFIX = "topic://";
 
-        String user = env("ACTIVEMQ_USER", "admin");
-        String password = env("ACTIVEMQ_PASSWORD", "password");
-        String host = env("ACTIVEMQ_HOST", "localhost");
-        int port = Integer.parseInt(env("ACTIVEMQ_PORT", "5672"));
+        String ConnectionURI = GetConnectionURI(args);
+        System.out.println("ConnectionURI: " + ConnectionURI);
 
-        String connectionURI = "amqp://" + host + ":" + port;
         String destinationName = arg(args, 0, "topic://event");
 
-        JmsConnectionFactory factory = new JmsConnectionFactory(connectionURI);
-
-        Connection connection = factory.createConnection(user, password);
+        JmsConnectionFactory factory = new JmsConnectionFactory(ConnectionURI);
+        Connection connection = factory.createConnection();
         connection.start();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
@@ -47,7 +43,6 @@ class Listener {
             destination = session.createQueue(destinationName);
         }
 
-        System.out.println("connectionURI: " + connectionURI);
         System.out.println("destination: " + destination);
 
         MessageConsumer consumer = session.createConsumer(destination);
@@ -88,6 +83,31 @@ class Listener {
                 System.out.println("Unexpected message type: " + msg.getClass());
             }
         }
+    }
+
+    private static String GetConnectionURI(String[] args) {
+        String user = env("JMS_USER", "admin");
+        String password = env("JMS_PASSWORD", "password");
+        String host = env("JMS_HOST", "localhost");
+        String protocol = "amqp";
+        int port = Integer.parseInt(env("JMS_PORT", "5672"));
+        if (port == 5671) {
+            protocol = "amqps";
+        }
+        String connectTimeout = env("JMS_CONNECTTIMEOUT", "");
+        String idleTimeout = env("JMS_IDLETIMEOUT", "");
+        String timeouts = "";
+        if (connectTimeout.length() > 0) {
+            timeouts += "&transport.connectTimeout=" + connectTimeout;
+        }
+        if (idleTimeout.length() > 0) {
+            timeouts += "&amqp.idleTimeout=" + idleTimeout;
+        }
+        String ConnectionURI = protocol + "://" + host + ":" + port + "/"
+                + "?jms.username=" + user
+                + "&jms.password=" + password
+                + timeouts;
+        return ConnectionURI;
     }
 
     private static String env(String key, String defaultValue) {

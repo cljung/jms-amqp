@@ -15,3 +15,10 @@ export JMS_PASSWORD=[shared access key - url encoded]
 # arg[2]=loop-count
 
 mvn exec:java -Dexec.mainClass="Publisher" -Dexec.args="testq02 'Hello from Java JMS app' 10"
+
+# -----------------------------------------------------
+# to recv messages
+# -----------------------------------------------------
+# arg[0]=queue-name
+
+mvn exec:java -Dexec.mainClass="Listener" -Dexec.args="testq02"

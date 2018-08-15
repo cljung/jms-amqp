@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 //package example;
 
 import org.apache.qpid.jms.*;
+
 import javax.jms.*;
 import java.util.Random;
 
@@ -25,16 +26,16 @@ class Publisher {
     public static void main(String[] args) throws JMSException {
 
         // get connection string from environment variables
-        String ConnectionURI = GetConnectionURI( args );
-        System.out.println("ConnectionURI: "+ConnectionURI);
+        String ConnectionURI = GetConnectionURI(args);
+        System.out.println("ConnectionURI: " + ConnectionURI);
 
         // get queue name and message details from command line
         String destinationName = arg(args, 0, "topic://event");
-        String msg = arg( args, 1, "Hello from Java App sending a test AMQP message via JMS to Azure ServiceBus Queue");
-        int loopCount = Integer.valueOf( arg( args, 2, "1") );
+        String msg = arg(args, 1, "Hello from Java App sending a test AMQP message via JMS to Azure ServiceBus Queue");
+        int loopCount = Integer.valueOf(arg(args, 2, "1"));
 
         // connect to AMQP host
-        JmsConnectionFactory factory = new JmsConnectionFactory( ConnectionURI );
+        JmsConnectionFactory factory = new JmsConnectionFactory(ConnectionURI);
         Connection connection = factory.createConnection();
         connection.start();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -51,14 +52,14 @@ class Publisher {
         // create the sender
         MessageProducer sender = session.createProducer(destination);
         System.out.println(sender.getDestination());
-        System.out.println("sender: "+sender);
+        System.out.println("sender: " + sender);
 
         // send N number of messages
         Random randomGenerator = new Random();
         long start = System.currentTimeMillis();
         System.out.println("Sending messages...");
 
-        for( int n = 1; n <= loopCount; n++ ) {
+        for (int n = 1; n <= loopCount; n++) {
             TextMessage message = session.createTextMessage();
             message.setText("[" + n + "] " + msg);
             long randomMessageID = randomGenerator.nextLong() >>> 1;
@@ -74,22 +75,22 @@ class Publisher {
         connection.close();
     }
 
-    private static String GetConnectionURI( String[] args ) {
+    private static String GetConnectionURI(String[] args) {
         String user = env("JMS_USER", "admin");
         String password = env("JMS_PASSWORD", "password");
         String host = env("JMS_HOST", "localhost");
         String protocol = "amqp";
         int port = Integer.parseInt(env("JMS_PORT", "5672"));
-        if ( port == 5671 ) {
+        if (port == 5671) {
             protocol = "amqps";
         }
         String connectTimeout = env("JMS_CONNECTTIMEOUT", "");
         String idleTimeout = env("JMS_IDLETIMEOUT", "");
         String timeouts = "";
-        if ( connectTimeout.length() > 0 ) {
+        if (connectTimeout.length() > 0) {
             timeouts += "&transport.connectTimeout=" + connectTimeout;
         }
-        if ( idleTimeout.length() > 0 ) {
+        if (idleTimeout.length() > 0) {
             timeouts += "&amqp.idleTimeout=" + idleTimeout;
         }
         String ConnectionURI = protocol + "://" + host + ":" + port + "/"

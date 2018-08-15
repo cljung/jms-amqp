@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 //package example;
 
 import org.apache.qpid.jms.*;
+
 import javax.jms.*;
 
 class Listener {
@@ -46,8 +47,8 @@ class Listener {
             destination = session.createQueue(destinationName);
         }
 
-        System.out.println("connectionURI: "+connectionURI);
-        System.out.println("destination: "+destination);
+        System.out.println("connectionURI: " + connectionURI);
+        System.out.println("destination: " + destination);
 
         MessageConsumer consumer = session.createConsumer(destination);
         long start = System.currentTimeMillis();
@@ -57,14 +58,15 @@ class Listener {
             Message msg = consumer.receive();
             if (msg instanceof TextMessage) {
                 String body = ((TextMessage) msg).getText();
-                System.out.println( "Message body: " + body );
+                System.out.println("Message body: " + body);
                 if ("SHUTDOWN".equals(body)) {
                     long diff = System.currentTimeMillis() - start;
                     System.out.println(String.format("Received %d in %.2f seconds", count, (1.0 * diff / 1000.0)));
                     connection.close();
                     try {
                         Thread.sleep(10);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                     System.exit(1);
                 } else {
                     try {
